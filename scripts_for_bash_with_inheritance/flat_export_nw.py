@@ -14,8 +14,7 @@ headers_eng = {
     "Месяц": "month",
     "Период": "period",
     "Линия": "line",
-    "Порт": "destination_port",
-    "Страна": "destination_country",
+    "Порт": "tracking_seaport",
     "Отправитель": "shipper_name",
     "Получатель": "consignee_name",
     "Экспедитор": "expeditor",
@@ -26,7 +25,7 @@ headers_eng = {
     "Терминал": "terminal",
     "TEU": "teu",
     "Номер контейнера": "container_number",
-    "Номер декларации гтд": "declaration_number_gtd",
+    "Номер декларации гтд": "gtd_number",
     "КОД ТНВЭД": "tnved",
     "Группа груза по ТНВЭД": "tnved_group_id",
     "Наименование Группы": "tnved_group_name",
@@ -34,8 +33,8 @@ headers_eng = {
     "УНИ-компания": "shipper_name_unified",
     "Страна КОМПАНИИ": "shipper_country",
     "Направление": "direction",
-    "Коносамент": "consignment",
-    "Тип парка": "park_type",
+    "Коносамент": "booking",
+    "Тип парка": "is_empty",
     "Вес нетто (кг)": "goods_weight_netto"
 }
 
