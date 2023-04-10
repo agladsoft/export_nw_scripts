@@ -69,6 +69,8 @@ for dict_data in parsed_data:
             elif key in ['goods_weight_netto']:
                 dict_data[key] = float(value)
 
+    dict_data['ship_name'] = 'Нет данных'
+    dict_data['voyage'] = 'Нет данных'
     dict_data['original_file_name'] = os.path.basename(input_file_path)
     dict_data['original_file_parsed_on'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 basename = os.path.basename(input_file_path)
