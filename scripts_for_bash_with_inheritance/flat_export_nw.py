@@ -1,15 +1,11 @@
-import datetime
-import json
 import os
 import sys
-import contextlib
+import json
 import numpy as np
 import pandas as pd
+from pandas import DataFrame
 
-input_file_path = os.path.abspath(sys.argv[1])
-output_folder = sys.argv[2]
-
-headers_eng = {
+headers_eng: dict = {
     "Год": "year",
     "Месяц": "month",
     "Период": "period",
@@ -41,43 +37,48 @@ headers_eng = {
 }
 
 
-def trim_all_columns(df):
-    """
-    Trim whitespace from ends of each value across all series in dataframe
-    """
-    trim_strings = lambda x: x.strip() if isinstance(x, str) else x
-    return df.applymap(trim_strings)
+class ExportNW(object):
+    def __init__(self, input_file_path: str, output_folder: str):
+        self.input_file_path: str = input_file_path
+        self.output_folder: str = output_folder
+
+    @staticmethod
+    def trim_all_columns(df) -> DataFrame:
+        """
+        Delete the empty lines at the beginning and at the end of the lines.
+        """
+        return df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+
+    @staticmethod
+    def change_type_and_values(df) -> None:
+        """
+        Change data types or changing values.
+        """
+        df[['ship_name', 'voyage']] = df[['ship_name', 'voyage']].apply(lambda x: x.fillna('Нет данных'))
+
+    def write_to_json(self, parsed_data) -> None:
+        """
+        Write data to json.
+        """
+        basename: str = os.path.basename(self.input_file_path)
+        output_file_path: str = os.path.join(self.output_folder, f'{basename}.json')
+        with open(f"{output_file_path}", 'w', encoding='utf-8') as f:
+            json.dump(parsed_data, f, ensure_ascii=False, indent=4)
+
+    def main(self) -> None:
+        """
+        The main function where we read the Excel file and write the file to json.
+        """
+        df: DataFrame = pd.read_excel(self.input_file_path)
+        df = df.replace({np.nan: None})
+        df = df.dropna(axis=0, how='all')
+        df = df.rename(columns=headers_eng)
+        df = df.loc[:, ~df.columns.isin(['direction', 'tnved_group_name', 'shipper_inn', 'shipper_name_unified',
+                                         'destination_country'])]
+        df = self.trim_all_columns(df)
+        self.change_type_and_values(df)
+        self.write_to_json(df.to_dict('records'))
 
 
-def convert_to_int(val):
-    return int(val) if val.isdigit() else int(val in [True, 'True'])
-
-
-df = pd.read_csv(input_file_path, dtype=str)
-df = df.replace({np.nan: None})
-df = df.dropna(axis=0, how='all')
-df = df.rename(columns=headers_eng)
-df = df.loc[:, ~df.columns.isin(['direction', 'tnved_group_name', 'shipper_inn',
-                                 'shipper_name_unified', 'destination_country'])]
-df = trim_all_columns(df)
-parsed_data = df.to_dict('records')
-for dict_data in parsed_data:
-    for key, value in dict_data.items():
-        with contextlib.suppress(Exception):
-            if key in ['year', 'month', 'teu', 'container_size', 'container_count']:
-                dict_data[key] = convert_to_int(value)
-            elif key in ['tnved_group_id']:
-                dict_data[key] = f"{int(value)}"
-            elif key in ['goods_weight_netto']:
-                dict_data[key] = float(value)
-            elif key in ['is_empty']:
-                dict_data[key] = value in ['1', 1, 'да', 'Да', 'True']
-            elif key in ['ship_name', 'voyage']:
-                dict_data[key] = 'Нет данных' if value is None else value
-
-    dict_data['original_file_name'] = os.path.basename(input_file_path)
-    dict_data['original_file_parsed_on'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-basename = os.path.basename(input_file_path)
-output_file_path = os.path.join(output_folder, f'{basename}.json')
-with open(f"{output_file_path}", 'w', encoding='utf-8') as f:
-    json.dump(parsed_data, f, ensure_ascii=False, indent=4)
+export_nw: ExportNW = ExportNW(os.path.abspath(sys.argv[1]), sys.argv[2])
+export_nw.main()
