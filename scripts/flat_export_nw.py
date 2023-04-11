@@ -83,5 +83,5 @@ class ExportNW(object):
         self.write_to_json(df.to_dict('records'))
 
 
-export_nw: ExportNW = ExportNW(os.path.abspath(sys.argv[1]), sys.argv[2])
+export_nw: ExportNW = ExportNW(sys.argv[1], sys.argv[2])
 export_nw.main()
