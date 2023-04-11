@@ -4,6 +4,7 @@ import json
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
+from datetime import datetime
 
 headers_eng: dict = {
     "Год": "year",
@@ -73,6 +74,8 @@ class ExportNW(object):
         df = df.replace({np.nan: None})
         df = df.dropna(axis=0, how='all')
         df = df.rename(columns=headers_eng)
+        df['original_file_name'] = os.path.basename(self.input_file_path)
+        df['original_file_parsed_on'] = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         df = df.loc[:, ~df.columns.isin(['direction', 'tnved_group_name', 'shipper_inn', 'shipper_name_unified',
                                          'destination_country'])]
         df = self.trim_all_columns(df)
