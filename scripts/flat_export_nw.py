@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import contextlib
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
@@ -55,7 +56,8 @@ class ExportNW(object):
         """
         Change data types or changing values.
         """
-        df[['ship_name', 'voyage']] = df[['ship_name', 'voyage']].apply(lambda x: x.fillna('Нет данных'))
+        with contextlib.suppress(KeyError):
+            df[['ship_name', 'voyage']] = df[['ship_name', 'voyage']].apply(lambda x: x.fillna('Нет данных'))
 
     def write_to_json(self, parsed_data) -> None:
         """
