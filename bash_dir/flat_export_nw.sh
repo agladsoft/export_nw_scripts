@@ -2,12 +2,6 @@
 
 xls_path="${XL_IDP_PATH_NW_EXPORT}/flat_export_nw"
 
-
-csv_path="${xls_path}"/csv
-if [ ! -d "$csv_path" ]; then
-  mkdir "${csv_path}"
-fi
-
 done_path="${xls_path}"/done
 if [ ! -d "$done_path" ]; then
   mkdir "${done_path}"
