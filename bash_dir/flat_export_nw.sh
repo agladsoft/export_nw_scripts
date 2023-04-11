@@ -30,7 +30,7 @@ do
   echo "'${file} - ${mime_type}'"
 
 	# Will convert csv to json
-	python3 ${XL_IDP_ROOT_NW_EXPORT}/scripts_for_bash_with_inheritance/flat_export_nw.py "${file}" "${json_path}"
+	python3 ${XL_IDP_ROOT_NW_EXPORT}/scripts/flat_export_nw.py "${file}" "${json_path}"
 
   if [ $? -eq 0 ]
 	then
