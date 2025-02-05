@@ -3,7 +3,7 @@
 # Declare a string array with type
 declare -a DirsArray=(
     "flat_export_nw"
-#    "flat_export_nw_tracking_update"
+    "flat_export_nw_tracking_update"
 )
 
 for dir in "${DirsArray[@]}"; do
