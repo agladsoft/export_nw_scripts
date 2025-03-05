@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 from datetime import datetime
-from parsed import ParsedDf
+from src.scripts.parsed import ParsedDf
 
 headers_eng: dict = {
     "Год": "year",
